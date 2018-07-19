@@ -16,19 +16,12 @@
 			"connections" : {
 				"dataSet" : [
 					"ClassAssigner",
-					"TextViewer"
+					"A40",
+					"B20 - Sicilian Defense",
+					"NumericCleaner"
 				]
 			},
-			"coordinates" : "19,200"
-		},
-		{
-			"class" : "weka.knowledgeflow.steps.TextViewer",
-			"properties" : {
-				"name" : "TextViewer"
-			},
-			"connections" : {
-			},
-			"coordinates" : "74,88"
+			"coordinates" : "12,52"
 		},
 		{
 			"class" : "weka.knowledgeflow.steps.ClassAssigner",
@@ -41,7 +34,7 @@
 					"CrossValidationFoldMaker"
 				]
 			},
-			"coordinates" : "146,207"
+			"coordinates" : "255,150"
 		},
 		{
 			"class" : "weka.knowledgeflow.steps.CrossValidationFoldMaker",
@@ -53,33 +46,15 @@
 			},
 			"connections" : {
 				"trainingSet" : [
-					"ZeroR"
+					"NaiveBayes",
+					"KStar"
 				],
 				"testSet" : [
-					"ZeroR"
+					"NaiveBayes",
+					"KStar"
 				]
 			},
-			"coordinates" : "275,195"
-		},
-		{
-			"class" : "weka.knowledgeflow.steps.Classifier",
-			"properties" : {
-				"classifier" : {
-					"type" : "optionHandler",
-					"class" : "weka.classifiers.rules.ZeroR",
-					"options" : ""
-				},
-				"loadClassifierFileName" : "",
-				"name" : "ZeroR",
-				"resetIncrementalClassifier" : false,
-				"updateIncrementalClassifier" : true
-			},
-			"connections" : {
-				"batchClassifier" : [
-					"ClassifierPerformanceEvaluator"
-				]
-			},
-			"coordinates" : "414,197"
+			"coordinates" : "435,144"
 		},
 		{
 			"class" : "weka.knowledgeflow.steps.ClassifierPerformanceEvaluator",
@@ -93,9 +68,12 @@
 			"connections" : {
 				"text" : [
 					"TextViewer2"
+				],
+				"visualizableError" : [
+					"ModelPerformanceChart"
 				]
 			},
-			"coordinates" : "528,190"
+			"coordinates" : "687,68"
 		},
 		{
 			"class" : "weka.knowledgeflow.steps.TextViewer",
@@ -104,7 +82,218 @@
 			},
 			"connections" : {
 			},
-			"coordinates" : "529,73"
+			"coordinates" : "711,-11"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.Classifier",
+			"properties" : {
+				"classifier" : {
+					"type" : "optionHandler",
+					"class" : "weka.classifiers.bayes.NaiveBayes",
+					"options" : ""
+				},
+				"loadClassifierFileName" : "",
+				"name" : "NaiveBayes",
+				"resetIncrementalClassifier" : false,
+				"updateIncrementalClassifier" : true
+			},
+			"connections" : {
+				"batchClassifier" : [
+					"ClassifierPerformanceEvaluator"
+				]
+			},
+			"coordinates" : "539,87"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.ModelPerformanceChart",
+			"properties" : {
+				"name" : "ModelPerformanceChart",
+				"offscreenAdditionalOpts" : "",
+				"offscreenHeight" : "400",
+				"offscreenRendererName" : "Weka Chart Renderer",
+				"offscreenWidth" : "500",
+				"offscreenXAxis" : "",
+				"offscreenYAxis" : ""
+			},
+			"connections" : {
+			},
+			"coordinates" : "811,66"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.DataVisualizer",
+			"properties" : {
+				"name" : "DataVisualizer",
+				"offscreenAdditionalOpts" : "",
+				"offscreenHeight" : "400",
+				"offscreenRendererName" : "Weka Chart Renderer",
+				"offscreenWidth" : "500",
+				"offscreenXAxis" : "",
+				"offscreenYAxis" : ""
+			},
+			"connections" : {
+			},
+			"coordinates" : "339,559"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.ScatterPlotMatrix",
+			"properties" : {
+				"name" : "ScatterPlotMatrix"
+			},
+			"connections" : {
+			},
+			"coordinates" : "182,552"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.ScatterPlotMatrix",
+			"properties" : {
+				"name" : "ScatterPlotMatrix2"
+			},
+			"connections" : {
+			},
+			"coordinates" : "7,756"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.DataVisualizer",
+			"properties" : {
+				"name" : "DataVisualizer2",
+				"offscreenAdditionalOpts" : "",
+				"offscreenHeight" : "400",
+				"offscreenRendererName" : "Weka Chart Renderer",
+				"offscreenWidth" : "500",
+				"offscreenXAxis" : "",
+				"offscreenYAxis" : ""
+			},
+			"connections" : {
+			},
+			"coordinates" : "151,738"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.Clusterer",
+			"properties" : {
+				"clusterer" : {
+					"type" : "optionHandler",
+					"class" : "weka.clusterers.SimpleKMeans",
+					"options" : "-init 0 -max-candidates 100 -periodic-pruning 10000 -min-density 2.0 -t1 -1.25 -t2 -1.0 -N 2 -A \"weka.core.EuclideanDistance -R first-last\" -I 500 -num-slots 1 -S 10"
+				},
+				"loadClustererFileName" : "",
+				"name" : "SimpleKMeans"
+			},
+			"connections" : {
+			},
+			"coordinates" : "262,283"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.Filter",
+			"properties" : {
+				"filter" : {
+					"type" : "optionHandler",
+					"class" : "weka.filters.unsupervised.instance.SubsetByExpression",
+					"options" : "-E \"ATT14 is \\'A40\\'\""
+				},
+				"name" : "A40"
+			},
+			"connections" : {
+				"dataSet" : [
+					"DataVisualizer",
+					"ScatterPlotMatrix"
+				]
+			},
+			"coordinates" : "229,450"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.Filter",
+			"properties" : {
+				"filter" : {
+					"type" : "optionHandler",
+					"class" : "weka.filters.unsupervised.instance.SubsetByExpression",
+					"options" : "-E \"ATT14 is \\'B20\\'\""
+				},
+				"name" : "B20 - Sicilian Defense"
+			},
+			"connections" : {
+				"dataSet" : [
+					"DataVisualizer2",
+					"ScatterPlotMatrix2"
+				]
+			},
+			"coordinates" : "64,651"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.Classifier",
+			"properties" : {
+				"classifier" : {
+					"type" : "optionHandler",
+					"class" : "weka.classifiers.lazy.KStar",
+					"options" : "-B 10 -M d -do-not-check-capabilities -batch-size 50"
+				},
+				"loadClassifierFileName" : "",
+				"name" : "KStar",
+				"resetIncrementalClassifier" : false,
+				"updateIncrementalClassifier" : true
+			},
+			"connections" : {
+				"batchClassifier" : [
+					"ClassifierPerformanceEvaluator2"
+				]
+			},
+			"coordinates" : "548,189"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.ClassifierPerformanceEvaluator",
+			"properties" : {
+				"costMatrixString" : "",
+				"errorPlotPointSizeProportionalToMargin" : false,
+				"evaluateWithRespectToCosts" : false,
+				"evaluationMetricsToOutput" : "Correct,Incorrect,Kappa,Total cost,Average cost,KB relative,KB information,Correlation,Complexity 0,Complexity scheme,Complexity improvement,MAE,RMSE,RAE,RRSE,TP rate,FP rate,Precision,Recall,F-measure,MCC,ROC area,PRC area",
+				"name" : "ClassifierPerformanceEvaluator2"
+			},
+			"connections" : {
+				"text" : [
+					"TextViewer3"
+				],
+				"visualizableError" : [
+					"ModelPerformanceChart2"
+				]
+			},
+			"coordinates" : "692,195"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.TextViewer",
+			"properties" : {
+				"name" : "TextViewer3"
+			},
+			"connections" : {
+			},
+			"coordinates" : "820,138"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.ModelPerformanceChart",
+			"properties" : {
+				"name" : "ModelPerformanceChart2",
+				"offscreenAdditionalOpts" : "",
+				"offscreenHeight" : "400",
+				"offscreenRendererName" : "Weka Chart Renderer",
+				"offscreenWidth" : "500",
+				"offscreenXAxis" : "",
+				"offscreenYAxis" : ""
+			},
+			"connections" : {
+			},
+			"coordinates" : "818,229"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.Filter",
+			"properties" : {
+				"filter" : {
+					"type" : "optionHandler",
+					"class" : "weka.filters.unsupervised.attribute.NumericCleaner",
+					"options" : "-min -1.7976931348623157E308 -min-default -1.7976931348623157E308 -max 1.7976931348623157E308 -max-default 1.7976931348623157E308 -closeto 0.0 -closeto-default 0.0 -closeto-tolerance 1.0E-6 -R first-10,12,last -decimals -1"
+				},
+				"name" : "NumericCleaner"
+			},
+			"connections" : {
+			},
+			"coordinates" : "133,12"
 		}
 	]
 }
