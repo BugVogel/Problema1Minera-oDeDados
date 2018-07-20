@@ -2,29 +2,6 @@
 	"flow_name" : "projeto",
 	"steps" : [
 		{
-			"class" : "weka.knowledgeflow.steps.Loader",
-			"properties" : {
-				"loader" : {
-					"type" : "loader",
-					"class" : "weka.core.converters.CSVLoader",
-					"filePath" : "../../Users/lucas/Documents/Problema1Minera-oDeDados/Projeto Weka/games.csv",
-					"useRelativePath" : true,
-					"options" : "-format \"yyyy-MM-dd\\'T\\'HH:mm:ss\" -M ? -B 100 -E \"\\\",\\'\" -F ,"
-				},
-				"name" : "CSVLoader"
-			},
-			"connections" : {
-				"dataSet" : [
-					"A40",
-					"B20 - Sicilian Defense",
-					"TrainTestSplitMaker",
-					"InterquartileRange",
-					"Empate"
-				]
-			},
-			"coordinates" : "14,431"
-		},
-		{
 			"class" : "weka.knowledgeflow.steps.CrossValidationFoldMaker",
 			"properties" : {
 				"name" : "CrossValidationFoldMaker",
@@ -118,7 +95,7 @@
 			},
 			"connections" : {
 			},
-			"coordinates" : "470,676"
+			"coordinates" : "484,662"
 		},
 		{
 			"class" : "weka.knowledgeflow.steps.ScatterPlotMatrix",
@@ -127,7 +104,7 @@
 			},
 			"connections" : {
 			},
-			"coordinates" : "468,755"
+			"coordinates" : "489,748"
 		},
 		{
 			"class" : "weka.knowledgeflow.steps.ScatterPlotMatrix",
@@ -151,7 +128,7 @@
 			},
 			"connections" : {
 			},
-			"coordinates" : "448,858"
+			"coordinates" : "441,819"
 		},
 		{
 			"class" : "weka.knowledgeflow.steps.Clusterer",
@@ -177,7 +154,7 @@
 				"filter" : {
 					"type" : "optionHandler",
 					"class" : "weka.filters.unsupervised.instance.SubsetByExpression",
-					"options" : "-E \"ATT14 is \\'A40\\'\""
+					"options" : "-E \"ATT12 is \\'A40\\'\""
 				},
 				"name" : "A40"
 			},
@@ -187,7 +164,7 @@
 					"ScatterPlotMatrix"
 				]
 			},
-			"coordinates" : "336,700"
+			"coordinates" : "348,684"
 		},
 		{
 			"class" : "weka.knowledgeflow.steps.Filter",
@@ -195,17 +172,18 @@
 				"filter" : {
 					"type" : "optionHandler",
 					"class" : "weka.filters.unsupervised.instance.SubsetByExpression",
-					"options" : "-E \"ATT14 is \\'B20\\'\""
+					"options" : "-E \"ATT12 is \\'B20\\'\""
 				},
 				"name" : "B20 - Sicilian Defense"
 			},
 			"connections" : {
 				"dataSet" : [
 					"DataVisualizer2",
-					"ScatterPlotMatrix2"
+					"ScatterPlotMatrix2",
+					"ClassAssigner2"
 				]
 			},
-			"coordinates" : "336,850"
+			"coordinates" : "324,838"
 		},
 		{
 			"class" : "weka.knowledgeflow.steps.TrainTestSplitMaker",
@@ -303,7 +281,7 @@
 				"filter" : {
 					"type" : "optionHandler",
 					"class" : "weka.filters.unsupervised.instance.SubsetByExpression",
-					"options" : "-E \"ATT7 is \\'draw\\'\""
+					"options" : "-E \"ATT5 is \\'draw\\'\""
 				},
 				"name" : "Empate"
 			},
@@ -314,6 +292,104 @@
 				]
 			},
 			"coordinates" : "344,1047"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.Loader",
+			"properties" : {
+				"loader" : {
+					"type" : "loader",
+					"class" : "weka.core.converters.ArffLoader",
+					"filePath" : "../../Users/lucas/Documents/Problema1Minera-oDeDados/Projeto Weka/games.arff",
+					"useRelativePath" : true
+				},
+				"name" : "ArffLoader"
+			},
+			"connections" : {
+				"dataSet" : [
+					"TrainTestSplitMaker",
+					"InterquartileRange",
+					"A40",
+					"B20 - Sicilian Defense",
+					"Empate"
+				]
+			},
+			"coordinates" : "32,414"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.ClassAssigner",
+			"properties" : {
+				"classColumn" : "winner",
+				"name" : "ClassAssigner2"
+			},
+			"connections" : {
+				"dataSet" : [
+					"CrossValidationFoldMaker2"
+				]
+			},
+			"coordinates" : "516,893"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.CrossValidationFoldMaker",
+			"properties" : {
+				"name" : "CrossValidationFoldMaker2",
+				"numFolds" : "10",
+				"preserveOrder" : false,
+				"seed" : "1"
+			},
+			"connections" : {
+				"trainingSet" : [
+					"MultilayerPerceptron"
+				],
+				"testSet" : [
+					"MultilayerPerceptron"
+				]
+			},
+			"coordinates" : "632,887"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.Classifier",
+			"properties" : {
+				"classifier" : {
+					"type" : "optionHandler",
+					"class" : "weka.classifiers.functions.MultilayerPerceptron",
+					"options" : "-L 0.3 -M 0.2 -N 50 -V 0 -S 0 -E 20 -H a -batch-size 20"
+				},
+				"loadClassifierFileName" : "",
+				"name" : "MultilayerPerceptron",
+				"resetIncrementalClassifier" : false,
+				"updateIncrementalClassifier" : true
+			},
+			"connections" : {
+				"batchClassifier" : [
+					"ClassifierPerformanceEvaluator2"
+				]
+			},
+			"coordinates" : "742,883"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.ClassifierPerformanceEvaluator",
+			"properties" : {
+				"costMatrixString" : "",
+				"errorPlotPointSizeProportionalToMargin" : false,
+				"evaluateWithRespectToCosts" : false,
+				"evaluationMetricsToOutput" : "Correct,Incorrect,Kappa,Total cost,Average cost,KB relative,KB information,Correlation,Complexity 0,Complexity scheme,Complexity improvement,MAE,RMSE,RAE,RRSE,TP rate,FP rate,Precision,Recall,F-measure,MCC,ROC area,PRC area",
+				"name" : "ClassifierPerformanceEvaluator2"
+			},
+			"connections" : {
+				"text" : [
+					"TextViewer3"
+				]
+			},
+			"coordinates" : "856,872"
+		},
+		{
+			"class" : "weka.knowledgeflow.steps.TextViewer",
+			"properties" : {
+				"name" : "TextViewer3"
+			},
+			"connections" : {
+			},
+			"coordinates" : "865,766"
 		}
 	]
 }
